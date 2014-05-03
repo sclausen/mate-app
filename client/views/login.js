@@ -1,5 +1,6 @@
 Router.map(function() {
   this.route('login', {
+    path: "/:language?/login",
     onBeforeAction: function() {
       if (Meteor.user()) {
         this.redirect("news")
