@@ -1,0 +1,35 @@
+<template name="admin_crates">
+  {{> pagination pages}}
+  {{#if isInRole 'crates:create'}}
+    <div class="form-group">
+      <a class="btn btn-success" href="{{pathFor 'admin_crate' _id='new'}}"><i class="fa fa-plus"></i> {{i18n 'new_crate'}}</a>
+    </div>
+  {{/if}}
+  <table class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th></th>
+        <th>{{i18n 'content'}}</th>
+        <th>{{i18n 'stock'}}</th>
+        <th>{{i18n 'price'}}&nbsp;(€)</th>
+        <th>{{i18n 'bought'}}</th>
+        <th>{{i18n 'depleted'}}</th>
+        <th>{{i18n 'roomNo'}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each crates}}
+      <tr>
+        <td><a class="btn btn-default btn-block" href="{{pathFor 'admin_crate' _id=_id}}"><i class="fa fa-wrench"></i></a></td>
+        <td>{{content}}</td>
+        <td>{{volume}}</td>
+        <td>{{formatCurrency pricePerBottle}}</td>
+        <td>{{dateFormat bought}}</td>
+        <td>{{dateFormat depleted}}</td>
+        <td>{{roomNo}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  {{> pagination pages}}
+</template>

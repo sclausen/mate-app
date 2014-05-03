@@ -1,0 +1,35 @@
+<template name="not_found">
+  <div class="container">
+    <div class="jumbotron">
+    <h1>{{i18n 'not_found_header'}}</h1>
+      <p>{{i18n 'not_found_text'}}</p>
+      <p><a href="/" class="btn btn-primary btn-large">{{i18n 'back'}}</a></p>
+    </div>
+  </div>
+</template>
+
+<head>
+  <title>mate-app</title>
+</head>
+
+<body>
+  <span style="position:fixed;bottom:5px;right:5px;font-size:9px;">v2.4.0</span>
+</body>
+
+<template name="layout">
+  {{> flashMessages}}
+  {{> navigation}}
+  {{#unless currentUser}}
+    {{> login}}
+  {{else}}
+    {{#unless termsAndConditionsAccepted}}
+      {{> termsAndConditions}}
+    {{else}}
+      <div class="container">
+        <div class="row">
+          {{> yield}}
+        </div>
+      </div>
+    {{/unless}}
+  {{/unless}}
+</template>

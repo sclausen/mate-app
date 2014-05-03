@@ -1,0 +1,14 @@
+{
+  "packages": {
+    "iron-router": {},
+    "german-mocker": {},
+    "dimsum": {},
+    "fontawesome4": {},
+    "nprogress": {},
+    "numeral": {},
+    "selectize": {},
+    "roles": {},
+    "iron-router-active": {},
+    "i18n": {}
+  }
+}

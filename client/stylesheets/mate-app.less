@@ -1,0 +1,294 @@
+@import "bootstrap/variables.lessimport";
+
+body {
+  padding-top: 70px;
+  padding-bottom: 40px;
+
+  background: url(/img/mate_logo.svg) #f5f5f5 no-repeat center center fixed;
+  -webkit-background-size: 40%;
+  -moz-background-size: 40%;
+  -o-background-size: 40%;
+  background-size: 40%;
+  -khtml-opacity:.9;
+  -moz-opacity:.9;
+  -ms-filter:"alpha(opacity=9)";
+  filter:alpha(opacity=9);
+  filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0.9);
+  opacity:.9;
+}
+
+.mate-logo {
+  float:left;
+  margin-top: 5px;
+  margin-left: 5px;
+  width: 40px;
+  height: 40px;
+  background-image: url("/img/mate_logo.svg");
+  background-repeat: no-repeat;
+  -webkit-background-size: 100% 100%;
+  -moz-background-size: contain;-o-background-size:100% 100%;
+  background-size: contain;
+  -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/img/mate_logo.svg',sizingMethod='scale')";
+  -moz-border-image: url("/img/mate_logo.svg") 0
+}
+
+.navbar-brand {
+  padding-left: 5px;
+}
+
+.form-signin {
+  max-width: 400px;
+  padding: 19px 29px 29px;
+  margin: 0 auto 20px;
+  background-color: #fff;
+  border: 1px solid #e5e5e5;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+  -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+
+.form-signin .row div {
+  padding-left:0px;
+  padding-right:0px;
+}
+
+
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 20px;
+}
+
+.form-signin input[type="text"],
+.form-signin input[type="password"] {
+  font-size: 16px;
+  height: auto;
+  margin-bottom: 15px;
+  padding: 7px 9px;
+}
+
+
+@baseBorderRadius: 4px;
+@tableBorder: #ddd; // table and cell border
+@tableBackgroundAccent: #f9f9f9; // for striping
+
+// Border Radius
+.border-radius(@radius) {
+  -webkit-border-radius: @radius;
+     -moz-border-radius: @radius;
+          border-radius: @radius;
+}
+
+.admin-statistics {
+  .bar rect {
+    fill: #777;
+  }
+
+  .bar text.value {
+    fill: white;
+  }
+
+  .axis {
+    shape-rendering: crispEdges;
+  }
+
+  .axis path {
+    fill: none;
+  }
+
+  .x.axis line {
+    stroke: #fff;
+    stroke-opacity: .8;
+  }
+
+  .y.axis path {
+    stroke: black;
+  }
+}
+
+.statistics {
+  border: 1px solid @tableBorder;
+  .border-radius(@baseBorderRadius);
+  color: @tableBorder;
+  background-color: white;
+
+  rect {
+    fill: steelblue;
+    stroke: #000;
+  }
+
+  .bar {
+    fill: steelblue;
+    stroke: none;
+  }
+
+  .axis {
+    path, line  {
+      fill: none;
+      stroke: @tableBorder;
+      shape-rendering: crispEdges;
+    }
+    text{
+      fill: #777;
+    }
+  }
+
+  .grid {
+    .tick {
+      stroke: lightgrey;
+      opacity: 0.7;
+    }
+    path {
+        stroke-width: 0;
+    }
+  }
+
+  .dot {
+    stroke: #000;
+  }
+
+  .line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+  }
+}
+
+//// BOOTSTRAP OVERRIDES //////////////////////////////////////////////////////
+
+// ZEBRA-STRIPING
+// --------------
+
+.panel-default .panel-heading {
+  background-color: #FFF;
+}
+
+.table {
+  thead {
+    background-color: white;
+  }
+  tbody tr td
+  {
+    vertical-align:middle;
+  }
+}
+
+// Default zebra-stripe styles (alternating gray and transparent backgrounds)
+.table-striped {
+  tbody {
+    > tr:nth-child(odd) > td,
+    > tr:nth-child(odd) > th {
+      background-color: @tableBackgroundAccent;
+    }
+    > tr:nth-child(even) > td,
+    > tr:nth-child(even) > th {
+      background-color: white;
+    }
+  }
+}
+
+@-webkit-keyframes shake {
+  0% { -webkit-transform: translate(2px, 1px) rotate(0deg); }
+  2% { -webkit-transform: translate(-1px, -2px) rotate(-1deg); }
+  4% { -webkit-transform: translate(-3px, 0px) rotate(1deg); }
+  6% { -webkit-transform: translate(0px, 2px) rotate(0deg); }
+  8% { -webkit-transform: translate(1px, -1px) rotate(1deg); }
+  10% { -webkit-transform: translate(-1px, 2px) rotate(-1deg); }
+  12% { -webkit-transform: translate(-3px, 1px) rotate(0deg); }
+  14% { -webkit-transform: translate(2px, 1px) rotate(-1deg); }
+  16% { -webkit-transform: translate(-1px, -1px) rotate(1deg); }
+  18% { -webkit-transform: translate(2px, 2px) rotate(0deg); }
+  20% { -webkit-transform: translate(1px, -2px) rotate(-1deg); }
+  100% { -webkit-transform: translate(1px, -2px) rotate(0deg); }
+}
+.unread-news {
+  margin-top:2px;
+  margin-bottom:-2px;
+  -webkit-animation-name: shake;
+  -webkit-animation-duration: 2s;
+  -webkit-transform-origin:50% 50%;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+}
+
+body div.row {
+  margin: 0;
+}
+
+.alert-row {
+  margin: 0;
+}
+
+.ec-box {
+  // position: absolute;
+  float:right;
+  margin-right: -20px;
+  margin-top: -20px;
+  width:250px;
+  padding: 15px;
+  font-family: 'Lucida Grande',Arial;
+  font-size: 20px;
+  text-align: center;
+  color: red;
+  line-height: 2.1em;
+  opacity: 0.6;
+  border: 3px dotted #ccc;
+  -moz-transform: rotate(10deg);
+  -webkit-transform: rotate(20deg);
+  -o-transform: rotate(20deg);
+  -ms-transform: rotate(20deg);
+  span {
+    font-size: 32px;
+  }
+  strong {
+    font-size: 70px;
+    line-height: 0.9em;
+  }
+}
+
+.pt0 {
+  padding-top: 0px !important;
+}
+
+#iron-router-progress {
+  background-color: @brand-primary;
+  box-shadow: none;
+  height: 2px;
+}
+
+#nprogress {
+  .bar {
+    background: @brand-primary;
+
+    position: fixed;
+    z-index: 1000000000;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 2px;
+  }
+  .peg {
+    box-shadow: 0 0 10px @brand-primary, 0 0 5px @brand-primary;
+  }
+}
+
+.username-selector {
+  width: 200px;
+}
+
+.selectize-dropdown [data-selectable] .highlight {
+  background-color: #777;
+  color: #FFF;
+  //opacity: 0.4;
+}
+
+.selectize-control.multi {
+  min-width: 200px;
+}
+
+.navbar-right > li:last-child{
+  margin-right:15px;
+}

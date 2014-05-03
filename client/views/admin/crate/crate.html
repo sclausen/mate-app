@@ -1,0 +1,132 @@
+<template name="admin_crate">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="form-horizontal">
+        <div class="form-group">
+          <label for="content" class="col-lg-2 control-label">{{i18n 'content'}}</label>
+          <div class="col-lg-10">
+            <input type="text" class="form-control" id="content" value="{{crate.content}}" placeholder="{{i18n 'content'}}" disabled={{disabledByRole 'crates:create,crates:update'}}>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="volume" class="col-lg-2 control-label">{{i18n 'stock'}}</label>
+          <div class="col-lg-10">
+            <input type="text" class="form-control" id="volume" value="{{crate.volume}}" placeholder="{{i18n 'stock'}}" disabled={{disabledByRole 'crates:create,crates:update'}}>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="pricePerBottle" class="col-lg-2 control-label">{{i18n 'price'}}</label>
+          <div class="col-lg-10">
+            <div class="input-group">
+              <input type="text" class="form-control" id="pricePerBottle" value="{{crate.pricePerBottle}}" placeholder="{{i18n 'price'}}" disabled={{disabledByRole 'crates:create,crates:update'}}>
+              <span class="input-group-addon"><strong>ct</strong></span>
+            </div>
+
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="bought" class="col-lg-2 control-label">{{i18n 'bought'}}</label>
+          <div class="col-lg-10">
+            {{#if isInRole 'crates:create,crates:update'}}
+              <div class="input-group bought">
+                <span class="input-group-btn">
+                  <button class="btn btn-default" type="button"><i class="fa fa-clock-o"></i></button>
+                </span>
+                <input class="form-control" id="bought" value="{{dateFormat crate.bought format="YYYY-MM-DD HH:mm:ss"}}" type="text" placeholder="{{i18n 'bought'}}" />
+              </div>
+            {{else}}
+              <input class="form-control" id="bought" value="{{dateFormat crate.bought format="YYYY-MM-DD HH:mm:ss"}}" type="text" placeholder="{{i18n 'bought'}}" disabled=disabled />
+            {{/if}}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="depleted" class="col-lg-2 control-label">{{i18n 'depleted'}}</label>
+          <div class="col-lg-10">
+            {{#if isInRole 'crates:create,crates:update'}}
+              <div class="input-group depleted">
+                <span class="input-group-btn">
+                  <button class="btn btn-default" type="button"><i class="fa fa-clock-o"></i></button>
+                </span>
+                <input class="form-control" id="depleted" value="{{dateFormat crate.depleted format="YYYY-MM-DD HH:mm:ss"}}" type="text" placeholder="{{i18n 'not_depleted'}}" />
+              </div>
+            {{else}}
+              <input class="form-control" id="depleted" value="{{dateFormat crate.depleted format="YYYY-MM-DD HH:mm:ss"}}" type="text" placeholder="{{i18n 'not_depleted'}}" disabled=disabled />
+            {{/if}}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="roomNo" class="col-lg-2 control-label">{{i18n 'roomNo'}}</label>
+          <div class="col-lg-10">
+            <input type="text" class="form-control" id="roomNo" value="{{crate.roomNo}}" placeholder="{{i18n 'roomNo'}}" disabled={{disabledByRole 'crates:create,crates:update'}}>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-lg-offset-2 col-lg-10">
+            {{#if isInRole 'crates:update,crates:create'}}<button class="btn btn-success save" crate-id="{{crate._id}}"><i class="fa fa-save"></i> {{i18n 'save'}}</button>{{/if}}
+            <button class="btn btn-danger cancel"><i class="fa fa-reply"></i> {{i18n 'back'}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">{{i18n 'transactions'}}</div>
+    <div class="panel-body">
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>{{i18n 'date'}}</th>
+            <th>{{i18n 'consumer'}}</th>
+            <th>{{i18n 'subject'}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each transactions}}
+          <tr>
+            <td>{{dateFormat bought format="Do MMMM YYYY HH:mm:ss"}}</td>
+            <td>{{userName}}</td>
+            <td>
+            {{#if description}}
+              {{description}}
+            {{else}}
+              {{#if crate}}
+                {{i18n 'transaction_bottle_bought' volume=crate.volume content=crate.content roomNo=crate.roomNo bought:dateFormat=crate.bought pricePerBottle:formatCurrency=crate.pricePerBottle}}
+              {{else}}
+                {{type}} {{i18n 'of'}} {{formatCurrency value}}
+              {{/if}}
+            {{/if}}
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">{{i18n 'history'}}</h3>
+    </div>
+    <style type="text/css">
+      #chartcontainer {
+        position: relative;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      #chart {
+        position: relative;
+        margin-left: 20px;
+      }
+      #yaxis {
+        position: absolute;
+        width: 20px;
+      }
+    </style>
+    <div class="panel-body">
+      <div class="chartcontainer">
+        <div id="yaxis"></div>
+        <div id="chart"></div>
+      </div>
+    </div>
+  </div>
+</template>

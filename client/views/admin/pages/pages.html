@@ -1,0 +1,24 @@
+<template name="admin_pages">
+  {{#if isInRole 'pages:create'}}<div class="form-group">
+    <a class="btn btn-success" href="{{pathFor 'admin_pages_edit' _id='new'}}"><i class="fa fa-plus"></i> {{i18n 'new_page'}}</a>
+  </div>{{/if}}
+  {{#each pages}}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          {{#if isInRole 'pages:update'}}
+            <a href="{{pathFor 'admin_pages_edit' _id=_id}}">{{title}} <small>{{name}}-{{locale}}</small></a>
+          {{else}}
+            {{title}} <small>{{name}}</small>
+          {{/if}}
+          {{#if isInRole 'pages:delete'}}
+            <button type="button" class="close pull-right delete" id="{{_id}}">&times;</button>
+          {{/if}}
+        </h3>
+        <small>{{dateFormat date}}</small>
+      </div>
+      <div class="panel-body">{{{text}}}</div>
+    </div>
+  {{/each}}
+  {{#if moreResults}}<div id="showMoreResults"></div>{{/if}}
+</template>

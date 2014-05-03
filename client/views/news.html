@@ -1,0 +1,12 @@
+<template name="news">
+  {{#each news}}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">{{headline}}</h3>
+        <small>{{dateFormat date}}</small>
+      </div>
+      <div class="panel-body">{{#markdown}}{{text}}{{/markdown}}</div>
+    </div>
+  {{/each}}
+  {{#if moreResults}}<div id="showMoreResults"></div>{{/if}}
+</template>
