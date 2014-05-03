@@ -1,4 +1,12 @@
 Meteor.startup(function() {
+  ServiceConfiguration.configurations.remove({
+    service: "github"
+  });
+  ServiceConfiguration.configurations.insert({
+    service: "github",
+    clientId: "your-github-app-client-id",
+    secret: "your-github-app-secret"
+  });
   // mockUsers(30, function() {
   //   mockCrates(5, function() {
   //     mockTransactions(3);
