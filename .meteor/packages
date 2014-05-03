@@ -1,0 +1,23 @@
+# Meteor packages used by this project, one per line.
+#
+# 'meteor add' and 'meteor remove' will edit this file for you,
+# but you can also edit it by hand.
+
+standard-app-packages
+browser-policy
+d3
+dimsum
+fontawesome4
+german-mocker
+i18n
+iron-router
+iron-router-active
+jquery
+less
+nprogress
+numeral
+random
+roles
+selectize
+showdown
+accounts-github
