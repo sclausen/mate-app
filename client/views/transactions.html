@@ -10,14 +10,14 @@
     <tbody>
     {{#each transactions}}
       <tr>
-        <td>{{dateFormat bought}}</td>
+        <td>{{dateFormat boughtAt}}</td>
         <td>{{#if description}}
         {{description}}
         {{else}}
           {{#if crate}}
-            {{i18n 'transaction_bottle_bought' volume=crate.volume content=crate.content roomNo=crate.roomNo bought:dateFormat=crate.bought pricePerBottle:formatCurrency=crate.pricePerBottle}}
+            {{i18n 'transaction_bottle_bought' crate}}
           {{else}}
-            {{type}} {{i18n 'of'}} {{formatCurrency value}}
+            {{i18n type}} {{i18n 'for'}} {{formatCurrency value}}
           {{/if}}
         {{/if}}
         </td>
@@ -25,7 +25,9 @@
     {{/each}}
     </tbody>
   </table>
-  {{#if moreResults}}<div id="showMoreResults"></div>{{/if}}
+  {{#if moreResults}}
+    <button id="showMoreResults" type="button" class="btn btn-primary btn-block">{{#unless ready}}{{i18n 'loading'}} <i class="fa fa-spinner fa-spin"></i>{{else}}{{i18n 'load_more'}} <i class="fa fa-refresh"></i>{{/unless}}</button>
+  {{/if}}
 {{else}}
   <div class="jumbotron">
     <h1>{{i18n 'no_transactions_header'}}</h1>

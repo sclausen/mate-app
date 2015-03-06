@@ -1,5 +1,6 @@
 <template name="navigation">
   <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
         <span class="sr-only">{{i18n 'toggle-navigation'}}</span>
@@ -10,77 +11,78 @@
       <div class="mate-logo"></div>
       <a class="navbar-brand" href="{{pathFor 'news'}}">&nbsp;mate-app</a>
     </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse navbar-ex1-collapse">
-      {{#if currentUser}}
-        <ul class="nav navbar-nav">
-          <li class="{{isActiveRoute "^news$"}}"><a href="{{pathFor 'news'}}"><div class="{{unreadNews}}"><i class="fa fa-file-text"></i> {{i18n 'news'}}</div></a></li>
-          <li class="{{isActiveRoute "^crates$"}}"><a href="{{pathFor 'crates'}}"><i class="fa fa-archive"></i> {{i18n 'crates'}}</a></li>
-          <li class="{{isActiveRoute "^help$"}}"><a href="{{pathFor 'help'}}"><i class="fa fa-medkit"></i> {{i18n 'help'}}</a></li>
-          <li class="{{isActiveRoute "^impressum$"}}"><a href="{{pathFor 'impressum'}}"><strong>§</strong> {{i18n 'imprint'}}</a></li>
-        </ul>
+      {{#if termsAndConditionsAccepted}}
+      <ul class="nav navbar-nav">
+        <li class="{{isActiveRoute regex="^news$"}}"><a href="{{pathFor 'news'}}"><div class="{{unreadNews}}"><i class="fa fa-file-text"></i> {{i18n 'news'}}</div></a></li>
+        <li class="{{isActiveRoute regex="^crates$"}}"><a href="{{pathFor 'crates'}}"><i class="fa fa-archive"></i> {{i18n 'crates'}}</a></li>
+        <li class="{{isActiveRoute regex="^help$"}}"><a href="{{pathFor 'help'}}"><i class="fa fa-medkit"></i> {{i18n 'help'}}</a></li>
+        <li class="{{isActiveRoute regex="^legalnotice$"}}"><a href="{{pathFor 'legalnotice'}}"><strong>§</strong> {{i18n 'legalnotice'}}</a></li>
+      </ul>
       {{/if}}
       <ul class="nav navbar-nav navbar-right">
-        {{#if currentUser}}
-          {{#if isInRole 'admin'}}
-          <li class="dropdown {{isActivePath "admin"}}">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-gears"></i> {{i18n 'admin'}} <b class="caret"></b></a>
-            <ul class="dropdown-menu">
-              {{#if isInRole 'users:read'}}
-              <li class="{{isActiveRoute "admin_consumers"}}">
-                <a href="{{pathFor 'admin_consumers'}}"><i class="fa fa-users"></i> {{i18n 'consumers'}}</a>
-              </li>
-              {{/if}}
-              {{#if isInRole 'transactions:read'}}
-              <li class="{{isActiveRoute "admin_transactions"}}">
-                <a href="{{pathFor 'admin_transactions'}}"><i class="fa fa-eur"></i> {{i18n 'transactions'}}</a>
-              </li>
-              {{/if}}
-              {{#if isInRole 'crates:read'}}
-              <li class="{{isActiveRoute "admin_crates"}}">
-                <a href="{{pathFor 'admin_crates'}}"><i class="fa fa-archive"></i> {{i18n 'crates'}}</a>
-              </li>
-              {{/if}}
-              <li class="{{isActiveRoute "admin_news"}}">
-                <a href="{{pathFor 'admin_news'}}"><i class="fa fa-file-text"></i> {{i18n 'news'}}</a>
-              </li>
-              {{#if isInRole 'pages:read'}}
-              <li class="{{isActiveRoute "admin_pages"}}">
-                <a href="{{pathFor 'admin_pages'}}"><i class="fa fa-book"></i> {{i18n 'pages'}}</a>
-              </li>
-              {{/if}}
-              {{#if isInRole 'statistics:read'}}
-              <li class="{{isActiveRoute "admin_statistics"}}">
-                <a href="{{pathFor 'admin_statistics'}}"><i class="fa fa-bar-chart-o"></i> {{i18n 'statistics'}}</a>
-              </li>
-              {{/if}}
-            </ul>
-          </li>
-          {{/if}}
-          <li class="dropdown {{isActiveRoute "^transactions$|^profile$|^bonusprogram$"}}">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{currentUser.username}} ({{formatCurrency currentUser.profile.balance}}) <b class="caret"></b></a>
-            <ul class="dropdown-menu">
-              <li class="{{isActiveRoute "^profile$"}}">
-                <a href="{{pathFor 'profile'}}"><i class="fa fa-gears"></i> {{i18n 'profile'}}</a>
-              </li>
-              <li class="{{isActiveRoute "^transactions$"}}">
-                <a href="{{pathFor 'transactions'}}"><i class="fa fa-eur"></i> {{i18n 'transactions'}}</a>
-              </li>
-              <li><a href="{{pathFor 'logout'}}" class="logout"><i class="fa fa-sign-out"></i> {{i18n 'logout'}}</a></li>
-            </ul>
-          </li>
+        {{#if termsAndConditionsAccepted}}
+        {{#if isInRole 'admin'}}
+        <li class="dropdown {{isActivePath regex="^admin/*"}}">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-gears"></i> {{i18n 'admin'}} <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            {{#if isInRole 'users:read'}}
+            <li class="{{isActiveRoute regex="admin_consumers"}}">
+              <a href="{{pathFor 'admin_consumers'}}"><i class="fa fa-users"></i> {{i18n 'consumers'}}</a>
+            </li>
+            {{/if}}
+            {{#if isInRole 'transactions:read'}}
+            <li class="{{isActiveRoute regex="admin_transactions"}}">
+              <a href="{{pathFor 'admin_transactions'}}"><i class="fa fa-eur"></i> {{i18n 'transactions'}}</a>
+            </li>
+            {{/if}}
+            {{#if isInRole 'crates:read'}}
+            <li class="{{isActiveRoute regex="admin_crates"}}">
+              <a href="{{pathFor 'admin_crates'}}"><i class="fa fa-archive"></i> {{i18n 'crates'}}</a>
+            </li>
+            {{/if}}
+            <li class="{{isActiveRoute regex="admin_news"}}">
+              <a href="{{pathFor 'admin_news'}}"><i class="fa fa-file-text"></i> {{i18n 'news'}}</a>
+            </li>
+            {{#if isInRole 'pages:read'}}
+            <li class="{{isActiveRoute regex="admin_pages"}}">
+              <a href="{{pathFor 'admin_pages'}}"><i class="fa fa-book"></i> {{i18n 'pages'}}</a>
+            </li>
+            {{/if}}
+            {{#if isInRole 'statistics:read'}}
+            <li class="{{isActiveRoute regex="admin_statistics"}}">
+              <a href="{{pathFor 'admin_statistics'}}"><i class="fa fa-bar-chart-o"></i> {{i18n 'statistics'}}</a>
+            </li>
+            {{/if}}
+          </ul>
+        </li>
+        {{/if}}
+        <li class="dropdown {{isActiveRoute regex="^transactions$|^profile$|^bonusprogram$"}}">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{userName}} ({{formatCurrency currentUser.profile.balance}}) <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li class="{{isActiveRoute regex="^profile$"}}">
+              <a href="{{pathFor 'profile'}}"><i class="fa fa-gears"></i> {{i18n 'profile'}}</a>
+            </li>
+            <li class="{{isActiveRoute regex="^transactions$"}}">
+              <a href="{{pathFor 'transactions'}}"><i class="fa fa-eur"></i> {{i18n 'transactions'}}</a>
+            </li>
+            <li><a href="/logout" class="logout"><i class="fa fa-sign-out"></i> {{i18n 'logout'}}</a></li>
+          </ul>
+        </li>
         {{/if}}
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-flag"></i> {{i18n currentLanguage}} <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li class="{{activeLanguageClass 'en'}}">
-              <a href="{{pathToLanguage 'en'}}">{{i18n 'en'}}</a>
+              <a href="" class="changeLocale" locale="en">{{i18n 'en'}}</a>
             </li>
             <li class="{{activeLanguageClass 'de'}}">
-              <a href="{{pathToLanguage 'de'}}">{{i18n 'de'}}</a>
+              <a href="" class="changeLocale" locale="de">{{i18n 'de'}}</a>
             </li>
           </ul>
         </li>
       </ul>
-    </div>
+    </div><!-- /.navbar-collapse -->
   </nav>
 </template>

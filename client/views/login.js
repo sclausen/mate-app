@@ -1,26 +1,36 @@
-Router.map(function() {
-  this.route('login', {
-    path: "/:language?/login",
-    onBeforeAction: function() {
-      if (Meteor.user()) {
-        this.redirect("news")
-      }
-    }
-  });
-});
-
 Template.login.events({
-  'click .login': function() {
+  // 'click .loginOpenID': function() {
+  //   if (!Meteor.user()) {
+  //     NProgress.start();
+  //     Meteor.call("authenticate", function(error, response) {
+  //       NProgress.done();
+  //       if (error) {
+  //         FlashMessages.sendError(error.reason);
+  //       } else if (response.error) {
+  //         FlashMessages.sendError(response.reason);
+  //       } else if (response.authUrl) {
+  //         window.location.href = response.authUrl;
+  //       }
+  //     });
+  //   }
+  // },
+  'click .loginBGx': function() {
     if (!Meteor.user()) {
       NProgress.start();
-      Meteor.loginWithGithub(function(error, response) {
+      Meteor.loginWithBgx({
+        requestPermissions: ['user']
+      }, function(error) {
         NProgress.done();
         if (error) {
-          FlashMessages.sendError(error.reason);
-        } else if (response && response.error) {
-          FlashMessages.sendError(response.reason);
+          FlashMessages.sendError(error.message);
         }
       });
     }
+  }
+});
+
+Template.login.helpers({
+  showLoginButtons: function(){
+    return Session.get('showLoginButtons');
   }
 });

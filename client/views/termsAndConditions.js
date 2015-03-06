@@ -1,26 +1,25 @@
-Meteor.subscribe("pages", {
-  name: "termsAndConditions",
-  locale: Meteor.getLocale()
+// Meteor.subscribe("pages", );
+// 
+Meteor.subscribe('pages', {
+  name: 'termsAndConditions',
+  locale: Session.get('locale')
 });
 
-Template.termsAndConditions.helpers({
-  data: function() {
-    return Pages.findOne({
-      name: "termsAndConditions",
-      locale: Meteor.getLocale()
+Template.termsAndConditions.events({
+  'click .accept': function () {
+    Meteor.users.update(Meteor.userId(), {
+      $set: {
+        'profile.termsAndConditionsAccepted': true
+      }
     });
   }
 });
 
-Template.termsAndConditions.events({
-  'click .accept': function() {
-    Meteor.call('accept-terms-and-conditions', function(error, result) {
-      if (error && error.reason) {
-        FlashMessages.sendError(error.reason);
-      }
-      Router.go("news", {
-        language: Meteor.getLocale()
-      });
+Template.termsAndConditions.helpers({
+  data: function () {
+    return Pages.findOne({
+      name: 'termsAndConditions',
+      locale: Session.get('locale')
     });
   }
 });

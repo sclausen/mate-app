@@ -1,28 +1,29 @@
 Meteor.startup(function() {
-  ServiceConfiguration.configurations.remove({
-    service: "github"
+  Future = Npm.require('fibers/future');
+  Fiber = Npm.require('fibers');
+
+  Messages._ensureIndex({
+    createdAt: 1
+  }, {
+    expireAfterSeconds: 10
   });
-  ServiceConfiguration.configurations.insert({
-    service: "github",
-    clientId: "your-github-clientId",
-    secret: "your-github-secret"
-  });
+
+  // code to run on server at startup
+  // mockCrates(30,_.noop);
   // mockUsers(30, function() {
   //   mockCrates(5, function() {
   //     mockTransactions(3);
   //     mockRoles();
+  //     });
   //   });
   // });
-  // mockTranslations();
   // mockPages();
   // mockNews(8);
 
-  // Grant the user admin rights
-  // Meteor.users.update({
-  //   username: "your github username"
-  // }, {
-  //   $set: {
-  //     "roles": ["admin", "users:read", "users:update"]
-  //   }
-  // });
+  if(Pages.find().count() <= 0){
+    mockPages();
+  }
+  if(Meteor.roles.find().count() <= 0){
+    mockRoles();
+  }
 });

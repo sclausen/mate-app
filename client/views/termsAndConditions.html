@@ -1,17 +1,13 @@
 <template name="termsAndConditions">
-  <div class="modal show">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">{{data.title}}</h4>
-        </div>
-        <div class="modal-body">
-          {{#markdown}}{{data.text}}{{/markdown}}
-        </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default btn-success accept">{{i18n 'accept_terms_and_conditions'}}</button>
-      </div>
-      </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h2 class="panel-title">{{data.title}}</h2>
+    </div>
+    <div class="panel-body">
+      {{#markdown}}{{data.text}}{{/markdown}} 
+      {{#unless currentUser.profile.termsAndConditionsAccepted}}
+      <button type="button" class="btn btn-default btn-success accept">{{i18n 'accept_terms_and_conditions'}}</button>
+      {{/unless}}
     </div>
   </div>
 </template>

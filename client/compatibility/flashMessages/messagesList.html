@@ -1,0 +1,14 @@
+<template name="flashMessages">
+<div class="flashMessages">
+  {{#each messages}}
+    {{> flashMessageItem}}
+  {{/each}}
+</div>
+</template>
+
+<template name="flashMessageItem">
+  <div class="alert {{style}}" role="alert">
+    <button type="button" class="close" aria-hidden="true">&times;</button>
+    {{{t text metadata}}}
+  </div>
+</template>

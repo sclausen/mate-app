@@ -1,46 +1,5 @@
-Router.map(function() {
-  this.route('admin_crate', {
-    path: '/:language?/admin/crates/:_id',
-    waitOn: function() {
-      return [Meteor.subscribe("users"), Meteor.subscribe("transactions"), Meteor.subscribe("crates")];
-    },
-    controller: AdminController,
-    onBeforeAction: function() {
-      if (!Meteor.loggingIn() && !Roles.userIsInRole(Meteor.user(), ['crates:read'])) {
-        this.redirect('/');
-      }
-    },
-    data: function() {
-      if (this.ready()) {
-        var crate = Crates.findOne(this.params._id);
-
-        var transactions = Transactions.find({
-          "crate._id": this.params._id
-        }, {
-          sort: {
-            bought: -1
-          }
-        }).fetch();
-
-        var consumers = Meteor.users.find({}, {
-          sort: {
-            username: 1
-          }
-        }).fetch();
-
-        return {
-          transactions: transactions || [],
-          crate: crate || null,
-          consumers: consumers || []
-        };
-      }
-    }
-  });
-});
-
 Template.admin_crate.rendered = function() {
-
-  $('.bought').datetimepicker({
+  $('.boughtAt').datetimepicker({
     pick12HourFormat: false,
     pickSeconds: false
   });
@@ -53,20 +12,20 @@ Template.admin_crate.rendered = function() {
   var crateId = Router.current().params._id;
 
   if (!crateId) {
-    return false
+    return false;
   }
 
   var data = Transactions.find({
     "crate._id": crateId
   }, {
     sort: {
-      bought: 1
+      boughtAt: 1
     }
   }).map(function(tx) {
     return {
-      x: Math.floor((+tx.bought) / 1000),
+      x: Math.floor((+tx.boughtAt) / 1000),
       y: tx.crate.volume
-    }
+    };
   });
 
 
@@ -95,6 +54,7 @@ Template.admin_crate.rendered = function() {
     tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
     element: document.getElementById("yaxis")
   });
+
   graph.render();
 
 
@@ -106,32 +66,59 @@ Template.admin_crate.boughtPlaceholder = function() {
 
 Template.admin_crate.events({
   'click .save': function(event) {
-    var options = {
-      _id: $(event.currentTarget).attr("crate-id"),
+
+    crateId = $(event.currentTarget).attr("crate-id");
+
+    var crate = {
       content: $("#content").val(),
       volume: parseInt($("#volume").val()),
       pricePerBottle: parseInt($("#pricePerBottle").val()),
-      bought: $("#bought").val(),
+      boughtAt: moment($("#boughtAt").val())._d,
       roomNo: $("#roomNo").val()
+    };
+    var depletedAt = moment($("#depletedAt").val());
+
+    if (depletedAt.isValid()) {
+      crate.depletedAt = depletedAt._d;
     }
 
-    Meteor.call(
-      "save-crate",
-      options,
-      function(error, result) {
-        if (error && error.reason) {
-          FlashMessages.sendError(__(error.reason));
-        } else {
-          FlashMessages.sendSuccess(__("crate_saved"));
-          Router.go("admin_crates", {
-            language: Meteor.getLocale()
+    if (crateId) {
+      Crates.update(crateId, {
+        $set: crate
+      }, function(error) {
+        if (error) {
+          FlashMessages.sendError({
+            text: error.message
           });
         }
-      }
-    );
-    $("html, body").animate({
-      scrollTop: 0
-    }, "fast");
+        Router.go("admin_crates");
+      });
+    } else {
+      Crates.insert(crate, function(error) {
+        if (error) {
+          FlashMessages.sendError({
+            text: error.message
+          });
+        }
+        Router.go("admin_crates");
+      });
+    }
+
+    // Meteor.call(
+    //   "save-crate",
+    //   options,
+    //   function (error) {
+    //     if (error && error.reason) {
+    //       FlashMessages.sendError(__(error.reason));
+    //     } else {
+    //       FlashMessages.sendSuccess(__("crate_saved"));
+    //       Router.go("/admin/crates");
+    //     }
+    //   }
+    // );
+    // $("html, body").animate({
+    //   scrollTop: 0
+    // }, "fast");
   },
   'click .cancel': function() {
     history.back();

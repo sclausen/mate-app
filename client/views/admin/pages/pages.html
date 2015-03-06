@@ -1,13 +1,13 @@
 <template name="admin_pages">
   {{#if isInRole 'pages:create'}}<div class="form-group">
-    <a class="btn btn-success" href="{{pathFor 'admin_pages_edit' _id='new'}}"><i class="fa fa-plus"></i> {{i18n 'new_page'}}</a>
+    <a class="btn btn-success" href="{{pathFor 'admin_page_edit' _id='new'}}"><i class="fa fa-plus"></i> {{i18n 'new_page'}}</a>
   </div>{{/if}}
   {{#each pages}}
     <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title">
           {{#if isInRole 'pages:update'}}
-            <a href="{{pathFor 'admin_pages_edit' _id=_id}}">{{title}} <small>{{name}}-{{locale}}</small></a>
+            <a href="{{pathFor 'admin_page_edit' _id=_id}}">{{title}} <small>{{name}}-{{locale}}</small></a>
           {{else}}
             {{title}} <small>{{name}}</small>
           {{/if}}

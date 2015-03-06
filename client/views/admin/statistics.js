@@ -1,30 +1,3 @@
-Router.map(function() {
-  this.route('admin_statistics', {
-    path: '/:language?/admin/statistics',
-    waitOn: function() {
-      return [Meteor.subscribe("users"), Meteor.subscribe("transactions")]
-    },
-    controller: AdminController,
-    onBeforeAction: function() {
-      if (!Meteor.loggingIn() && !Roles.userIsInRole(Meteor.user(), ['statistics:read'])) {
-        this.redirect('/');
-      }
-    },
-    data: function() {
-      if (this.ready()) {
-        var transactions = Transactions.find({
-          crate: {
-            $exists: true
-          }
-        }).fetch();
-        return {
-          hasTransactions: !! transactions.length
-        }
-      }
-    }
-  });
-});
-
 Template.admin_statistics.rendered = function() {
   var self = this;
   self.consumptionNode = self.find("#admin-statistics-consumption");
@@ -69,7 +42,7 @@ Template.admin_statistics.rendered = function() {
   drawStatistics(self.balanceNode, balanceData, {
     formatCurrency: true
   });
-}
+};
 
 function drawStatistics(node, data, options) {
   var valueLabelWidth = 40; // space reserved for value labels (right)
@@ -129,7 +102,7 @@ function drawStatistics(node, data, options) {
     .attr('stroke', 'none')
     .attr('fill', 'black')
     .attr("dy", ".35em") // vertical-align: middle
-  .attr('text-anchor', 'end')
+    .attr('text-anchor', 'end')
     .text(barLabel);
   // bars
   var barsContainer = chart.append('g')
@@ -149,9 +122,9 @@ function drawStatistics(node, data, options) {
     })
     .attr("y", yText)
     .attr("dx", 3) // padding-left
-  .attr("dy", ".35em") // vertical-align: middle
-  .attr("text-anchor", "start") // text-align: right
-  .attr("fill", "black")
+    .attr("dy", ".35em") // vertical-align: middle
+    .attr("text-anchor", "start") // text-align: right
+    .attr("fill", "black")
     .attr("stroke", "none")
     .text(function(d) {
       if (options && options.formatCurrency && options.formatCurrency === true) {

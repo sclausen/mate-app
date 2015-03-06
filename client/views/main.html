@@ -13,23 +13,24 @@
 </head>
 
 <body>
-  <span style="position:fixed;bottom:5px;right:5px;font-size:9px;">v2.4.0</span>
+  <span style="position:fixed;bottom:5px;right:5px;font-size:9px;">v3.2.1</span>
 </body>
 
 <template name="layout">
-  {{> flashMessages}}
-  {{> navigation}}
   {{#unless currentUser}}
+    {{> flashMessages}}
     {{> login}}
   {{else}}
-    {{#unless termsAndConditionsAccepted}}
-      {{> termsAndConditions}}
-    {{else}}
-      <div class="container">
-        <div class="row">
+    {{> navigation}}
+    <div class="container">
+      <div class="row">
+        {{> flashMessages}}
+        {{#unless termsAndConditionsAccepted}}
+          {{> termsAndConditions}}
+        {{else}}
           {{> yield}}
-        </div>
+        {{/unless}}
       </div>
-    {{/unless}}
+    </div>
   {{/unless}}
 </template>

@@ -1,6 +1,4 @@
 <template name="admin_news">
-  {{> pagination pages}}
-
   {{#if isInRole 'news:create'}}<div class="form-group">
     <a class="btn btn-success" href="{{pathFor 'admin_news_edit' _id='new'}}"><i class="fa fa-plus"></i> {{i18n 'new_news'}}</a>
     <button class="btn btn-info propagate-new-news"><i class="fa fa-bullhorn"></i> {{i18n 'unread_news_flashing'}}</button>
@@ -10,9 +8,9 @@
       <div class="panel-heading">
         <h3 class="panel-title">
           {{#if isInRole 'news:update'}}
-            <a href="{{pathFor 'admin_news_edit' _id=_id}}">{{headline}} <small>{{locale}}</small></a>
+            <a href="{{pathFor 'admin_news_edit' _id=_id}}">{{headline}} ({{locale}})</a>
           {{else}}
-            {{headline}}
+            {{headline}} ({{locale}})
           {{/if}}
           {{#if isInRole 'news:delete'}}
             <button type="button" class="close pull-right delete" id="{{_id}}">&times;</button>
@@ -20,9 +18,10 @@
         </h3>
         <small>{{dateFormat date}} Uhr</small>
       </div>
-      <div class="panel-body">{{#markdown}}{{text}}{{/markdown}}</div>
+      <div class="panel-body">{{{text}}}</div>
     </div>
   {{/each}}
-
-  {{> pagination pages}}
+  {{#if moreResults}}
+    <button id="showMoreResults" type="button" class="btn btn-primary btn-block">{{#unless ready}}{{i18n 'loading'}} <i class="fa fa-spinner fa-spin"></i>{{else}}{{i18n 'load_more'}} <i class="fa fa-refresh"></i>{{/unless}}</button>
+  {{/if}}
 </template>

@@ -1,4 +1,6 @@
-@import "bootstrap/variables.lessimport";
+@import "bootstrap/variables.import.less";
+@import "bootstrap-datetimepicker.import.less";
+@import "rickshaw.import.less";
 
 body {
   padding-top: 70px;
@@ -36,6 +38,10 @@ body {
   padding-left: 5px;
 }
 
+.navbar-nav.navbar-right:last-child {
+  margin-right: 0px;
+}
+
 .form-signin {
   max-width: 400px;
   padding: 19px 29px 29px;
@@ -45,9 +51,9 @@ body {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
-  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-  -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0,.05);
+  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
 }
 
 .form-signin .row div {
@@ -217,47 +223,6 @@ body div.row {
   margin: 0;
 }
 
-.alert-row {
-  margin: 0;
-}
-
-.ec-box {
-  // position: absolute;
-  float:right;
-  margin-right: -20px;
-  margin-top: -20px;
-  width:250px;
-  padding: 15px;
-  font-family: 'Lucida Grande',Arial;
-  font-size: 20px;
-  text-align: center;
-  color: red;
-  line-height: 2.1em;
-  opacity: 0.6;
-  border: 3px dotted #ccc;
-  -moz-transform: rotate(10deg);
-  -webkit-transform: rotate(20deg);
-  -o-transform: rotate(20deg);
-  -ms-transform: rotate(20deg);
-  span {
-    font-size: 32px;
-  }
-  strong {
-    font-size: 70px;
-    line-height: 0.9em;
-  }
-}
-
-.pt0 {
-  padding-top: 0px !important;
-}
-
-#iron-router-progress {
-  background-color: @brand-primary;
-  box-shadow: none;
-  height: 2px;
-}
-
 #nprogress {
   .bar {
     background: @brand-primary;
@@ -289,6 +254,10 @@ body div.row {
   min-width: 200px;
 }
 
-.navbar-right > li:last-child{
-  margin-right:15px;
+.disabled2 {
+  cursor: not-allowed;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  opacity: .65;
 }

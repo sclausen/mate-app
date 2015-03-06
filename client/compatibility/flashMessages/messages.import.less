@@ -1,0 +1,47 @@
+.alert {
+  box-sizing: border-box;
+  position: relative;
+  width: auto;
+  margin-bottom: 1em;
+  border: 1px solid @border-color;
+  padding: 0 1em;
+  min-height: 60px;
+  padding: 20px 10px;
+  vertical-align: middle;
+  line-height: 1em;
+  > button.close {
+    display:inline-block;
+    -webkit-appearance: none;
+    padding: 0;
+    margin:0;
+    cursor: pointer;
+    background: 0 0;
+    border: 0;
+    color: hsl(hue(@color-empty), 45%, 90%);
+    font-weight: bold;
+  }
+
+}
+.alert-error {
+  > button.close {
+    color: darken(hsl(hue(spin(@color-primary, 140)), 60%, 90%), 50%);
+  }
+  color: darken(hsl(hue(spin(@color-primary, 140)), 60%, 90%), 50%);
+  background-color: hsl(hue(spin(@color-primary, 140)), 80%, 90%);
+  border-color: darken(hsl(hue(spin(@color-primary, 140)), 80%, 90%), 10%);
+
+}
+.alert-success {
+  > button.close {
+    color: darken(hsl(hue(spin(@color-primary, 255)), 50%, 80%), 50%);
+  }
+  color: darken(hsl(hue(spin(@color-primary, 255)), 50%, 80%), 50%);
+  background-color: hsl(hue(spin(@color-primary, 255)), 80%, 90%);
+  border-color: darken(hsl(hue(spin(@color-primary, 255)), 80%, 90%), 10%);
+
+}
+.alert-info {
+  color: @color-empty;
+  background-color: lighten(@color-primary, 10%);
+  border-color: darken(@color-primary, 10%);
+}

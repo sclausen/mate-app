@@ -1,25 +1,26 @@
 formatCurrency = function(number) {
+  number = number || 0;
   number /= 100;
-  return numeral(number).format('0.00 $')
-}
+  return numeral(number).format('0.00 $');
+};
 
 dateFormat = function(context, block) {
-  moment.lang(Meteor.getLocale());
-  if (typeof context === 'undefined' || context === null || context == '') {
+  moment.locale(Session.get('locale'));
+  if (typeof context === 'undefined' || context === null || context === '') {
     return "";
   } else if (window.moment) {
     var f = block && block.hash && block.hash.format ? block.hash.format : "Do MMMM YYYY HH:mm";
     return moment(context).format(f);
   } else {
     return context;
-  };
-}
+  }
+};
 
 UI.registerHelper('dateFormat', function(context, block) {
   return dateFormat(context, block);
 });
 
-UI.registerHelper('formatBoolean', function(context, block) {
+UI.registerHelper('formatBoolean', function(context) {
   if (typeof context === 'undefined' || context === null || context === false) {
     return "✗";
   } else {
@@ -27,7 +28,7 @@ UI.registerHelper('formatBoolean', function(context, block) {
   }
 });
 
-UI.registerHelper('formatNegativeBoolean', function(context, block) {
+UI.registerHelper('formatNegativeBoolean', function(context) {
   if (typeof context === 'undefined' || context === null || context === false) {
     return "✔";
   } else {
@@ -49,14 +50,7 @@ UI.registerHelper('unreadNews', function() {
   }
 });
 
-UI.registerHelper('isDev', function() {
-  if (window.location.hostname == 'localhost') {
-    return true;
-  }
-  return false;
-});
-
-UI.registerHelper('boolToChecked', function(context, block) {
+UI.registerHelper('boolToChecked', function(context) {
   if (typeof context === 'undefined' || context === null || context === false) {
     return false;
   } else {
@@ -64,7 +58,7 @@ UI.registerHelper('boolToChecked', function(context, block) {
   }
 });
 
-UI.registerHelper('booleanTextClass', function(context, block) {
+UI.registerHelper('booleanTextClass', function(context) {
   if (typeof context === 'undefined' || context === null || context === false) {
     return "text-danger";
   } else {
@@ -72,7 +66,7 @@ UI.registerHelper('booleanTextClass', function(context, block) {
   }
 });
 
-UI.registerHelper('negativeBooleanTextClass', function(context, block) {
+UI.registerHelper('negativeBooleanTextClass', function(context) {
   if (typeof context === 'undefined' || context === null || context === false) {
     return "text-success";
   } else {
@@ -84,35 +78,15 @@ UI.registerHelper('formatCurrency', function(number) {
   return formatCurrency(number);
 });
 
-UI.registerHelper('calculateBottleCount', function(context, block) {
-  return Math.floor(context / 0.7);
-});
-
-UI.registerHelper('buyButtonClass', function(context, block) {
-  if (typeof context === 'undefined') {
-    return 'btn btn-primary btn-block';
-  }
-  if (
-    Session.get("inProgress") == true ||
-    (Meteor.user() && parseFloat(parseFloat(Meteor.user().profile.balance).toFixed(2)) < context)
-  ) {
-    return 'btn btn-primary btn-block disabled';
-  } else {
-    return 'btn btn-primary btn-block';
-  }
-});
-
-UI.registerHelper('showAgb', function() {
-  return Session.get('showAgb');
-});
-
 UI.registerHelper('termsAndConditionsAccepted', function() {
-  return !!Meteor.user() && Meteor.user().profile && !! Meteor.user().profile.termsAndConditionsAccepted;
+  return !!Meteor.user().profile.termsAndConditionsAccepted;
 });
 
 var isNavActive = function(page, matchTop) {
   var isActive = false;
-  if (!Router || !Router.current() || Router.current().path.split('/')[1] === undefined) return false;
+  if (!Router || !Router.current() || Router.current().path.split('/')[1] === undefined) {
+    return false;
+  }
 
   // If desired check that the top level matches
   if (matchTop) {
@@ -150,39 +124,52 @@ UI.registerHelper('isActiveTop', function(page) {
 UI.registerHelper('disabledByRole', function(role, group) {
   var user = Meteor.user(),
     comma = (role || '').indexOf(','),
-    roles
+    roles;
 
-  if (!user) return false
-  if (!Match.test(role, String)) return false
+  if (!user) {
+    return false;
+  }
+  if (!Match.test(role, String)) {
+    return false;
+  }
 
   if (comma !== -1) {
     roles = _.reduce(role.split(','), function(memo, r) {
       if (!r || !r.trim()) {
-        return memo
+        return memo;
       }
-      memo.push(r.trim())
-      return memo
-    }, [])
+      memo.push(r.trim());
+      return memo;
+    }, []);
   } else {
-    roles = [role]
+    roles = [role];
   }
 
   if (Match.test(group, String)) {
-    return !Roles.userIsInRole(user, roles, group)
+    return !Roles.userIsInRole(user, roles, group);
   }
-  return !Roles.userIsInRole(user, roles)
+  return !Roles.userIsInRole(user, roles);
 });
 
 UI.registerHelper('hasElements', function(cursor) {
-  if (!cursor) return false;
-  return !!(cursor.count());
+  var hasElements = false;
+  if (!_.isArray(cursor)) {
+    hasElements = !!(cursor.count());
+  } else {
+    hasElements = cursor.length >= 0;
+  }
+  if (Object.prototype.toString.call(cursor) === '[object Array]') {
+    hasElements = cursor.length > 0;
+  }
+
+  return hasElements;
 });
 
 UI.registerHelper("pathFor", function(routeName, options) {
   var args = processPathArgs.call(this, routeName, options);
 
   args.params = _.extend(args.params, {
-    language: Meteor.getLocale()
+    language: Session.get('locale')
   });
 
   return Router.path(args.routeName, args.params, {
@@ -191,43 +178,11 @@ UI.registerHelper("pathFor", function(routeName, options) {
   });
 });
 
+
 UI.registerHelper('i18n', function(key, options) {
-  _.each(Object.keys(options.hash), function(key) {
-    var pair = key.split(":");
-    if (pair[1]) {
-      var result = UI._globalHelper(pair[1])(options.hash[key]);
-      key = pair[0];
-      options.hash[key] = result;
-    }
-  });
-
-  var result = __(key, options.hash);
-
-  return result;
+  return TAPi18n.__(key, options);
 });
 
-UI.registerHelper('pathToLanguage', function(language) {
-  var ironRouterPackage = 'iron-router';
-  var error, parameters, _ref, _ref1;
-  if (Package[ironRouterPackage]) {
-    try {
-      parameters = {
-        language: language
-      };
-      if ((_ref = Package[ironRouterPackage].Router.current()) != null ? _ref.params.section : void 0) {
-        parameters.section = Package[ironRouterPackage].Router.current().params.section;
-      }
-      if ((_ref = Package[ironRouterPackage].Router.current()) != null ? _ref.params._id : void 0) {
-        parameters._id = Package[ironRouterPackage].Router.current().params._id;
-      }
-      return (_ref1 = Package[ironRouterPackage].Router.current()) != null ? _ref1.route.path(parameters) : void 0;
-    } catch (_error) {
-      console.log(_error);
-      return "/" + language;
-    }
-  } else {
-    return Meteor._debug(
-      'To benefit from the "pathToLanguage" helper you need to install "iron-router" smart package (https://atmosphere.meteor.com/package/iron-router)'
-    );
-  }
+UI.registerHelper('t', function(key, options) {
+  return TAPi18n.__(key, options || {});
 });

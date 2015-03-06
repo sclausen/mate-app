@@ -1,0 +1,14 @@
+<template name="consumerRow">
+  <tr id="{{_id}}">
+    {{#if isInRole 'users:update'}}
+      <td><a class="btn btn-default btn-block edit" href="{{pathFor 'admin_consumer' _id=_id}}"><i class="fa fa-wrench"></i></a></td>
+    {{/if}}
+    <td>{{userName}}</td>
+    <td>{{dateFormat createdAt}}</td>
+    <td>{{dateFormat status.lastLogin.date}}</td>
+    <td><p class="{{booleanTextClass status.online}}">{{formatBoolean status.online}}</p></td>
+    <td>{{formatCurrency profile.balance}}</td>
+    <td><p class="{{booleanTextClass profile.termsAndConditionsAccepted}}">{{formatBoolean profile.termsAndConditionsAccepted}}</p></td>
+    <td><p class="{{negativeBooleanTextClass profile.unreadNews}}">{{formatNegativeBoolean profile.unreadNews}}</p></td>
+  </tr>
+</template>

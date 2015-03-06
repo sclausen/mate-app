@@ -25,32 +25,32 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="bought" class="col-lg-2 control-label">{{i18n 'bought'}}</label>
+          <label for="boughtAt" class="col-lg-2 control-label">{{i18n 'bought'}}</label>
           <div class="col-lg-10">
             {{#if isInRole 'crates:create,crates:update'}}
               <div class="input-group bought">
                 <span class="input-group-btn">
                   <button class="btn btn-default" type="button"><i class="fa fa-clock-o"></i></button>
                 </span>
-                <input class="form-control" id="bought" value="{{dateFormat crate.bought format="YYYY-MM-DD HH:mm:ss"}}" type="text" placeholder="{{i18n 'bought'}}" />
+                <input class="form-control" id="boughtAt" value="{{dateFormat crate.boughtAt format="YYYY-MM-DD HH:mm:ss"}}" type="text" placeholder="{{i18n 'bought'}}" />
               </div>
             {{else}}
-              <input class="form-control" id="bought" value="{{dateFormat crate.bought format="YYYY-MM-DD HH:mm:ss"}}" type="text" placeholder="{{i18n 'bought'}}" disabled=disabled />
+              <input class="form-control" id="boughtAt" value="{{dateFormat crate.boughtAt format="YYYY-MM-DD HH:mm:ss"}}" type="text" placeholder="{{i18n 'bought'}}" disabled=disabled />
             {{/if}}
           </div>
         </div>
         <div class="form-group">
-          <label for="depleted" class="col-lg-2 control-label">{{i18n 'depleted'}}</label>
+          <label for="depletedAt" class="col-lg-2 control-label">{{i18n 'depleted'}}</label>
           <div class="col-lg-10">
             {{#if isInRole 'crates:create,crates:update'}}
               <div class="input-group depleted">
                 <span class="input-group-btn">
                   <button class="btn btn-default" type="button"><i class="fa fa-clock-o"></i></button>
                 </span>
-                <input class="form-control" id="depleted" value="{{dateFormat crate.depleted format="YYYY-MM-DD HH:mm:ss"}}" type="text" placeholder="{{i18n 'not_depleted'}}" />
+                <input class="form-control" id="depletedAt" value="{{dateFormat crate.depletedAt format="YYYY-MM-DD HH:mm:ss"}}" type="text" placeholder="{{i18n 'not_depleted'}}" />
               </div>
             {{else}}
-              <input class="form-control" id="depleted" value="{{dateFormat crate.depleted format="YYYY-MM-DD HH:mm:ss"}}" type="text" placeholder="{{i18n 'not_depleted'}}" disabled=disabled />
+              <input class="form-control" id="depletedAt" value="{{dateFormat crate.depletedAt format="YYYY-MM-DD HH:mm:ss"}}" type="text" placeholder="{{i18n 'not_depleted'}}" disabled=disabled />
             {{/if}}
           </div>
         </div>
@@ -84,16 +84,16 @@
         <tbody>
           {{#each transactions}}
           <tr>
-            <td>{{dateFormat bought format="Do MMMM YYYY HH:mm:ss"}}</td>
+            <td>{{dateFormat boughtAt format="Do MMMM YYYY HH:mm:ss"}}</td>
             <td>{{userName}}</td>
             <td>
             {{#if description}}
               {{description}}
             {{else}}
               {{#if crate}}
-                {{i18n 'transaction_bottle_bought' volume=crate.volume content=crate.content roomNo=crate.roomNo bought:dateFormat=crate.bought pricePerBottle:formatCurrency=crate.pricePerBottle}}
+                {{i18n 'transaction_bottle_bought' crate}}
               {{else}}
-                {{type}} {{i18n 'of'}} {{formatCurrency value}}
+                {{i18n type}} {{i18n 'for'}} {{formatCurrency value}}
               {{/if}}
             {{/if}}
             </td>

@@ -5,8 +5,10 @@
         <h3 class="panel-title">{{headline}}</h3>
         <small>{{dateFormat date}}</small>
       </div>
-      <div class="panel-body">{{#markdown}}{{text}}{{/markdown}}</div>
+      <div class="panel-body">{{{text}}}</div>
     </div>
   {{/each}}
-  {{#if moreResults}}<div id="showMoreResults"></div>{{/if}}
+  {{#if moreResults}}
+    <button id="showMoreResults" type="button" class="btn btn-primary btn-block">{{#unless ready}}{{i18n 'loading'}} <i class="fa fa-spinner fa-spin"></i>{{else}}{{i18n 'load_more'}} <i class="fa fa-refresh"></i>{{/unless}}</button>
+  {{/if}}
 </template>

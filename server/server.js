@@ -1,15 +1,3 @@
-Accounts.onCreateUser(function(options, user) {
-  user.username = user.services.github.username;
-  user._id = user.services.github.id.toString();
-  user.profile = {
-    balance: 0,
-    created: user.createdAt,
-    unreadNews: true,
-    termsAndConditionsAccepted: false
-  };
-  return user;
-});
-
 Meteor.methods({
   'accept-terms-and-conditions': function() {
     Meteor.users.update({
@@ -20,61 +8,43 @@ Meteor.methods({
       }
     });
   },
-  'add-crate': function(options) {
-    var loggedInUser = Meteor.user();
-
-    if (!loggedInUser || !Roles.userIsInRole(loggedInUser, ['crates:create'])) {
-      throw new Meteor.Error(403, "access_denied");
-    }
-
-    check(options.content, String);
-    check(options.volume, Number);
-    check(options.pricePerBottle, Number);
-    check(options.bought, String);
-    check(options.roomNo, String);
-    check(options.buyerName, String);
-
-    var newCrate = {
-      content: options.content,
-      volume: options.volume,
-      pricePerBottle: options.pricePerBottle,
-      bought: new Date(+moment(options.bought)),
-      roomNo: options.roomNo,
-      buyerName: options.buyerName
-    };
-
-    Crates.insert(newCrate);
-
-    return newCrate;
+  'get-terms-and-conditions': function(locale) {
+    return Pages.findOne({
+      locale: locale,
+      name: 'termsAndConditions'
+    });
   },
   'save-crate': function(options) {
     var loggedInUser = Meteor.user();
 
     if (!loggedInUser || !Roles.userIsInRole(loggedInUser, ['crates:create', 'crates:update'])) {
-      throw new Meteor.Error(403, "access_denied");
+      FlashMessages.sendError({
+        text: 'access_denied',
+        userId: this.userId
+      });
     }
 
     check(options.content, String);
     check(options.volume, Number);
     check(options.pricePerBottle, Number);
-    check(options.bought, String);
+    check(options.boughtAt, String);
     check(options.roomNo, String);
 
-    if (options.volume == 0) {
+    if (options.volume === 0) {
       options = _.extend(options, {
-        depleted: new Date()
+        depletedAt: new Date()
       });
     } else if (options.volume > 0) {
-      if (options.depleted) {
-        delete options.depleted;
+      if (options.depletedAt) {
+        delete options.depletedAt;
       }
     }
 
-    if (options.depleted) {
-      options.depleted = new Date(moment(options.depleted).unix() * 1000);
+    if (options.depletedAt) {
+      options.depletedAt = new Date(moment(options.depletedAt).unix() * 1000);
     }
 
-    options.bought = new Date(moment(options.bought).unix() * 1000);
+    options.boughtAt = new Date(moment(options.boughtAt).unix() * 1000);
 
     if (options._id === undefined || options._id === null || options._id === '') {
       delete options._id;
@@ -89,11 +59,13 @@ Meteor.methods({
     var loggedInUser = Meteor.user();
 
     if (!loggedInUser || !Roles.userIsInRole(loggedInUser, ['news:create'])) {
-      throw new Meteor.Error(403, "access_denied");
+      FlashMessages.sendError({
+        text: 'access_denied',
+        userId: this.userId
+      });
     }
 
     check(options.headline, String);
-    check(options.locale, String);
     check(options.date, String);
     check(options.text, String);
 
@@ -111,22 +83,28 @@ Meteor.methods({
     var loggedInUser = Meteor.user();
 
     if (!loggedInUser || !Roles.userIsInRole(loggedInUser, ['news:create'])) {
-      throw new Meteor.Error(403, "access_denied");
+      FlashMessages.sendError({
+        text: 'access_denied',
+        userId: this.userId
+      });
+    } else {
+      Meteor.users.update({}, {
+        $set: {
+          "profile.unreadNews": true
+        }
+      }, {
+        multi: true
+      });
     }
-
-    Meteor.users.update({}, {
-      $set: {
-        "profile.unreadNews": true
-      }
-    }, {
-      multi: true
-    });
   },
   'delete-news': function(newsId) {
     var loggedInUser = Meteor.user();
 
     if (!loggedInUser || !Roles.userIsInRole(loggedInUser, ['news:delete'])) {
-      throw new Meteor.Error(403, "access_denied");
+      FlashMessages.sendError({
+        text: 'access_denied',
+        userId: this.userId
+      });
     }
 
     News.remove({
@@ -147,7 +125,10 @@ Meteor.methods({
     var loggedInUser = Meteor.user();
 
     if (!loggedInUser || !Roles.userIsInRole(loggedInUser, ['pages:create'])) {
-      throw new Meteor.Error(403, "access_denied");
+      FlashMessages.sendError({
+        text: 'access_denied',
+        userId: this.userId
+      });
     }
 
     check(options.title, String);
@@ -167,7 +148,10 @@ Meteor.methods({
     var loggedInUser = Meteor.user();
 
     if (!loggedInUser || !Roles.userIsInRole(loggedInUser, ['pages:delete'])) {
-      throw new Meteor.Error(403, "access_denied");
+      FlashMessages.sendError({
+        text: 'access_denied',
+        userId: this.userId
+      });
     }
 
     Pages.remove({
@@ -186,23 +170,22 @@ Meteor.methods({
       _id: crateId
     });
 
+    if (!crate) {
+      throw new Meteor.Error(404, "Kiste nicht gefunden!");
+    }
+
+    if (!user.profile.balance) {
+      user.profile.balance = 0;
+    }
+
     if (user.profile.balance < crate.pricePerBottle) {
-      throw new Meteor.Error(402, "insufficient_funds");
+      FlashMessages.sendError({
+        text: 'insufficient_funds',
+        userId: this.userId
+      });
     } else if (crate.volume < 1) {
       throw new Meteor.Error(404, "Sorry, die kiste ist bereits leer!");
     } else {
-
-      Meteor.users.update({
-        _id: self.userId
-      }, {
-        $set: {
-          'profile.balance': user.profile.balance - crate.pricePerBottle,
-          'profile.lastBought': {
-            when: +moment()
-          }
-        }
-      });
-
       var crateUpdateObject = {
         $inc: {
           volume: -1
@@ -211,7 +194,7 @@ Meteor.methods({
 
       if (crate.volume === 1) {
         crateUpdateObject.$set = {
-          depleted: new Date()
+          depletedAt: new Date()
         };
       }
 
@@ -223,94 +206,31 @@ Meteor.methods({
         _id: crateId
       });
 
+      Meteor.users.update({
+        _id: self.userId
+      }, {
+        $set: {
+          'profile.lastBought': {
+            when: +moment()
+          }
+        },
+        $inc: {
+          'profile.balance': -crate.pricePerBottle,
+        }
+      });
+
       Transactions.insert({
         userName: user.username,
         userId: this.userId,
         crate: crate,
         value: -crate.pricePerBottle,
-        bought: new Date()
+        boughtAt: new Date()
       });
 
-      return true;
+      return {
+        what: crate.content,
+        price: crate.pricePerBottle
+      };
     }
-  },
-  'update-money-relative': function(userId, value, type) {
-    var loggedInUser = Meteor.user();
-
-    if (!loggedInUser || !Roles.userIsInRole(loggedInUser, ['users:update'])) {
-      throw new Meteor.Error(403, "access_denied");
-    }
-
-    check(type, String);
-    value = value * 100;
-
-    var user = Meteor.users.findOne({
-      _id: userId
-    });
-    if (
-      (
-        value < 0 &&
-        user.profile.balance + value >= 0
-      ) || value > 0
-    ) {
-      Transactions.insert({
-        userName: user.username,
-        userId: user._id,
-        value: value,
-        type: type,
-        bought: new Date()
-      });
-
-      return Meteor.users.update({
-        _id: userId
-      }, {
-        $set: {
-          'profile.balance': user.profile.balance + value
-        }
-      });
-    } else {
-      throw new Meteor.Error(409, "admin_consumer_negative_balance_forbidden");
-    }
-  },
-  'admin-save-user': function(options) {
-    var loggedInUser = Meteor.user();
-
-    if (!loggedInUser || !Roles.userIsInRole(loggedInUser, ['users:update'])) {
-      throw new Meteor.Error(403, "access_denied");
-    }
-
-    check(options.userId, String);
-    check(options.unreadNews, Boolean);
-    check(options.termsAndConditionsAccepted, Boolean);
-
-    var user = Meteor.users.findOne({
-      _id: options.userId
-    });
-
-    var changedFields = {};
-
-    if (user.profile.unreadNews != options.unreadNews) {
-      changedFields["profile.unreadNews"] = options.unreadNews;
-    }
-
-    if (user.profile.termsAndConditionsAccepted != options.termsAndConditionsAccepted) {
-      changedFields["profile.termsAndConditionsAccepted"] = options.termsAndConditionsAccepted;
-    }
-
-    changedFields["roles"] = options.roles;
-
-
-    Meteor.users.update({
-      _id: options.userId
-    }, {
-      $set: changedFields
-    });
-    return Meteor.users.findOne({
-      _id: options.userId
-    }, {
-      username: 1,
-      profile: 1,
-      "services.resume": 1
-    });
   }
 });

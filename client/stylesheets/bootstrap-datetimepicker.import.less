@@ -1,0 +1,217 @@
+/*!
+ * Datepicker for Bootstrap
+ *
+ * Copyright 2012 Stefan Petre
+ * Licensed under the Apache License v2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+// @import "bootstrap/variables.lessimport";
+// @import "bootstrap/mixins.lessimport";
+// @import "bootstrap/buttons.lessimport";
+
+@border-radius-base:             4px;
+@btn-default-bg:                 #fff;
+@btn-primary-bg:                 @brand-primary;
+@brand-primary:                  #428bca;
+@btn-default-border:             #ccc;
+@gray-light:                     lighten(#000, 60%);   // #999
+@gray-lighter:                   lighten(#000, 93.5%); // #eee
+@font-size-base:                 14px;
+
+.button-variant(@color; @background; @border) {
+  color: @color;
+  background-color: @background;
+  border-color: @border;
+
+  &:hover,
+  &:focus,
+  &:active,
+  &.active,
+  .open .dropdown-toggle& {
+    color: @color;
+    background-color: darken(@background, 8%);
+        border-color: darken(@border, 12%);
+  }
+  &:active,
+  &.active,
+  .open .dropdown-toggle& {
+    background-image: none;
+  }
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    &,
+    &:hover,
+    &:focus,
+    &:active,
+    &.active {
+      background-color: @background;
+          border-color: @border;
+    }
+  }
+}
+
+.bootstrap-datetimepicker-widget {
+  top: 0;
+  left: 0;
+  width: 250px;
+  padding: 4px;
+  margin-top: 1px;
+  z-index: 3000;
+  border-radius: @border-radius-base;
+  &:before {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    top: -7px;
+    left: 6px;
+  }
+  &:after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    top: -6px;
+    left: 7px;
+  }
+  &.pull-right {
+    &:before {
+      left: auto;
+      right: 6px;
+    }
+    &:after {
+      left: auto;
+      right: 7px;
+    }
+  }
+  >ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 5px 0;
+  }
+  .timepicker-hour, .timepicker-minute, .timepicker-second {
+    width: 100%;
+    font-weight: bold;
+    font-size: 1.2em;
+  }
+  table[data-hour-format="12"] .separator {
+    width: 4px;
+    padding: 0;
+    margin: 0;
+  }
+  .datepicker > div {
+    display: none;
+  }
+  .picker-switch {
+    text-align: center;
+  }
+  table{
+    width: 100%;
+    margin: 0;
+  }
+  td,
+  th{
+    text-align: center;
+    width: 20px;
+    height: 20px;
+    border-radius: @border-radius-base;
+  }
+  td {
+    &.day:hover,
+    &.hour:hover,
+    &.minute:hover,
+    &.second:hover {
+      background: @gray-lighter;
+      cursor: pointer;
+    }
+    &.old,
+    &.new {
+      color: @gray-light;
+    }
+    &.active,
+    &.active:hover {
+      .button-variant(@btn-default-bg, spin(@btn-primary-bg, 20),@btn-default-border);
+      color: #fff;
+      text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+    }
+    &.disabled,
+    &.disabled:hover {
+      background: none;
+      color: @gray-light;
+      cursor: not-allowed;
+    }
+    span {
+      display: block;
+      // width: 47px;
+      // height: 54px;
+      line-height: 54px;
+      float: left;
+      margin: 2px;
+      cursor: pointer;
+      border-radius: @border-radius-base;
+      &:hover {
+        background: @gray-lighter;
+      }
+      &.active {
+        .button-variant(@btn-default-bg, spin(@btn-primary-bg, 20),@btn-default-border);
+        color: #fff;
+        text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+      }
+      &.old {
+        color: @gray-light;
+      }
+      &.disabled,
+      &.disabled:hover {
+        background: none;
+        color: @gray-light;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  th {
+    &.switch {
+      width: 145px;
+    }
+    &.next,
+    &.prev {
+      font-size: @font-size-base * 1.5;
+    }
+    &.disabled,
+    &.disabled:hover {
+      background: none;
+      color: @gray-light;
+      cursor: not-allowed;
+    }
+  }
+
+  thead tr:first-child th {
+    cursor: pointer;
+    &:hover{
+      background: @gray-lighter;
+    }
+  }
+  /*.dow {
+  border-top: 1px solid #ddd !important;
+  }*/
+}
+.input-group {
+  &.date {
+    .input-group-btn i {
+      // display: block;
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+.bootstrap-datetimepicker-widget.left-oriented {
+    &:before {
+        left: auto;
+        right: 6px;
+    }
+    &:after {
+        left: auto;
+        right: 7px;
+    }
+}

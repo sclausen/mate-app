@@ -1,0 +1,10 @@
+<template name="crate">
+  <tr>
+    <td><button class="{{buyButtonClass pricePerBottle}} buy-bottle"><i class="{{buyIconClass}}"></i> {{i18n 'buy'}}</button></td>
+    <td>{{roomNo}}</td>
+    <td>{{content}}</td>
+    <td>{{volume}}</td>
+    <td>{{formatCurrency pricePerBottle}}</td>
+    <td class="hidden-xs">{{dateFormat boughtAt}}</td>
+  </tr>
+</template>

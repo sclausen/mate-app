@@ -1,15 +1,9 @@
 <template name="admin_consumers">
+  <div class="row">
   {{#if isInRole 'users:update'}}
-    <select id="usernames" class="username-selector">
-      <option value="">{{i18n 'jump_to'}}</option>
-      {{#each allConsumers}}
-        <option value="{{_id}}">{{username}}</option>
-      {{/each}}
-    </select>
+    {{> userSelector allConsumers}}
   {{/if}}
-
-  {{> pagination pages}}
-
+  </div>
   <table class="table table-striped table-bordered">
     <thead>
       <tr>
@@ -19,6 +13,7 @@
         <th>{{i18n 'name'}}</th>
         <th>{{i18n 'joined'}}</th>
         <th>{{i18n 'last_seen'}}</th>
+        <th>{{i18n 'online'}}</th>
         <th>{{i18n 'balance'}}</th>
         <th>{{i18n 'terms_and_conditions_accepted'}}</th>
         <th>{{i18n 'news'}}</th>
@@ -26,20 +21,11 @@
     </thead>
     <tbody>
     {{#each consumers}}
-      <tr id="{{_id}}">
-        {{#if isInRole 'users:update'}}
-          <td><a class="btn btn-default btn-block edit" href="{{pathFor 'admin_consumer' _id=_id}}"><i class="fa fa-wrench"></i></a></td>
-        {{/if}}
-        <td>{{username}}</td>
-        <td>{{dateFormat profile.created}}</td>
-        <td>{{dateFormat profile.lastLogin}}</td>
-        <td>{{formatCurrency profile.balance}}</td>
-        <td><p class="{{booleanTextClass profile.termsAndConditionsAccepted}}">{{formatBoolean profile.termsAndConditionsAccepted}}</p></td>
-        <td><p class="{{negativeBooleanTextClass profile.unreadNews}}">{{formatNegativeBoolean profile.unreadNews}}</p></td>
-      </tr>
+      {{> consumerRow}}
     {{/each}}
     </tbody>
   </table>
-
-  {{> pagination pages}}
+  {{#if moreResults}}
+    <button id="showMoreResults" type="button" class="btn btn-primary btn-block">{{#unless ready}}{{i18n 'loading'}} <i class="fa fa-spinner fa-spin"></i>{{else}}{{i18n 'load_more'}} <i class="fa fa-refresh"></i>{{/unless}}</button>
+  {{/if}}
 </template>

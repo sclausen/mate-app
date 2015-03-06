@@ -17,3 +17,11 @@ Meteor.publish("pages", function(options) {
     return this.ready();
   }
 });
+
+Meteor.publish("pageSingle", function(pageId) {
+  if (Roles.userIsInRole(this.userId, ['pages:read'])) {
+    return Pages.find({_id:pageId});
+  } else {
+    return this.ready();
+  }
+});

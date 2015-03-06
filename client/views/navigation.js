@@ -7,13 +7,24 @@ Template.navigation.events({
 
 Template.navigation.helpers({
   activeLanguageClass: function(language) {
-    if (language === Meteor.getLocale()) {
+    if (language === Session.get('locale')) {
       return 'active';
     } else {
       return undefined;
     }
   },
   currentLanguage: function() {
-    return Meteor.getLocale();
+    return Session.get('locale');
+  },
+  userName: function() {
+    return Meteor.user().username ? Meteor.user().username : Meteor.user().profile.name;
+  }
+});
+
+Template.navigation.events({
+  'click .changeLocale': function(event) {
+    var locale = $(event.currentTarget).attr("locale");
+    changeLocale(locale);
+    event.preventDefault();
   }
 });
